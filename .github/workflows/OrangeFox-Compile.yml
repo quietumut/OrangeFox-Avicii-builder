@@ -105,6 +105,7 @@ jobs:
         set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
+        export OF_MAINTAINER=008
         export FOX_USE_SPECIFIC_MAGISK_ZIP=~/Magisk/Magisk 26.3.zip
         set -e
         ${{ steps.fox_branch.outputs.value }}
