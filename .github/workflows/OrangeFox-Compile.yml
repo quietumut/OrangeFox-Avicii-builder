@@ -99,9 +99,12 @@ jobs:
     - name: Building OrangeFox
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+        wget https://github.com/topjohnwu/Magisk/releases/download/v26.3/Magisk.v26.3.apk
+        mv Magisk.v26.3.apk Magisk-26.3.zip
         set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
+        export FOX_USE_SPECIFIC_MAGISK_ZIP=Magisk-26.3.zip
         set -e
         ${{ steps.fox_branch.outputs.value }}
 
