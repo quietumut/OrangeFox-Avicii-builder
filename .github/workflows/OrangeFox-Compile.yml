@@ -105,9 +105,8 @@ jobs:
     - name: Building OrangeFox
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        set +e
         source build/envsetup.sh
-        set -e
+        export FOX_USE_SPECIFIC_MAGISK_ZIP=${GITHUB_WORKSPACE}/Magisk/Magisk-v26.3.zip
         ${{ steps.fox_branch.outputs.value }}
 
     - name: Set Build Date # For Build Date Info, currently using Asia/Manila
