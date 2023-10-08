@@ -22,7 +22,7 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/MrDuartePT/OrangeFox-Avicii-builder.git'
+        default: 'https://github.com/MrDuartePT/android_device_oneplus_avicii.git'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
