@@ -95,13 +95,7 @@ jobs:
         cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
         if_true: lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image
         if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
-    - name: Getting Magisk
-      run: |
-        cd ${GITHUB_WORKSPACE}
-        mkdir Magisk
-        cd Magisk
-        wget https://github.com/topjohnwu/Magisk/releases/download/v26.3/Magisk.v26.3.apk
-        mv Magisk.v26.3.apk Magisk-26.3.zip
+        
     - name: Building OrangeFox
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
