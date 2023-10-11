@@ -137,5 +137,3 @@ jobs:
           Device: ${{ github.event.inputs.DEVICE_TREE }}/tree/${{ github.event.inputs.DEVICE_TREE_BRANCH }}
           Changes: *Solved Some bugs
                     *Added Magisk 26.3
-
-C
