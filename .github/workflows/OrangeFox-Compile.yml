@@ -127,10 +127,10 @@ jobs:
         source build/envsetup.sh
         ${{ steps.fox_release.outputs.value }}
         set -e
-        if [ -f ${GITHUB_WORKSPACE}/magisk/Magisk-v26.3.zip ]; then
+        if [ -f ${GITHUB_WORKSPACE}/Magisk/Magisk-v26.3.zip ]; then
           export FOX_USE_SPECIFIC_MAGISK_ZIP=${GITHUB_WORKSPACE}/magisk/Magisk-v26.3.zip
         else
-          cd ${GITHUB_WORKSPACE}/magisk/ 
+          cd ${GITHUB_WORKSPACE}/Magisk/ 
           ${{ steps.magisk.outputs.value }}
           mv Magisk.*.apk Magisk.zip
           cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
