@@ -109,7 +109,7 @@ jobs:
         if_false: echo $FOX_VERSION
 
     - name: Dowload latest Magisk #Dowload Magisk if is dont found
-      uses: robinraju/release-downloader@v1.8
+      uses: robinraju/release-downloader@v1.10
       id: magisk_dowload
       with:
         latest: true
