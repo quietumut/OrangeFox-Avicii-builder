@@ -108,13 +108,6 @@ jobs:
         if_true: export FOX_VERSION="${{ github.event.inputs.ORANGEFOX_VERSION }}"
         if_false: echo $FOX_VERSION
 
-    - name: Dowload latest Magisk #Dowload Magisk if is dont found
-      uses: robinraju/release-downloader@v1.10
-      id: magisk_dowload
-      with:
-        latest: true
-        fileName: "*.apk"
-
     - name: Set Release name
       id: release_name
       run: |
