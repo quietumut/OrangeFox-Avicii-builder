@@ -8,46 +8,6 @@ name: OrangeFox - Build
 
 on:
   workflow_dispatch:
-    inputs:
-      MANIFEST_BRANCH:
-        description: 'OrangeFox Branch'
-        required: true
-        default: '12.1'
-        type: choice
-        options:
-        - 12.1
-        - 11.0
-        - 10.0
-        - 9.0
-      DEVICE_TREE:
-        description: 'Custom Recovery Tree'
-        required: true
-        default: 'https://github.com/sreeshankark/android_device_oneplus_avicii-orangefox.git'
-      DEVICE_TREE_BRANCH:
-        description: 'Custom Recovery Tree Branch'
-        required: true
-        default: 'android-12.1'
-      DEVICE_PATH:
-        description: 'Specify your device path.'
-        required: true
-        default: 'device/oneplus/avicii'
-      ORANGEFOX_VERSION:
-        description: 'Specify your OrangeFox Version'
-        required: true
-        default: 'R11_x' #If not change use the vendorsetup one
-      DEVICE_NAME:
-        description: 'Specify your Device Codename.'
-        required: true
-        default: 'avicii'
-      BUILD_TARGET:
-        description: 'Specify your Build Target'
-        required: true
-        default: 'recovery'
-        type: choice
-        options:
-        - boot
-        - recovery
-        - vendorboot
 
 jobs:
   build:
@@ -89,8 +49,8 @@ jobs:
 
     - name: Clone Device Tree
       run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_R11_1
+        git clone https://github.com/RedmiNote10S/recovery_device_redmi_rosemary -b device/xiaomi/rosemary ./rosemary
 
     - name: Check Manifest Branch
       uses: haya14busa/action-cond@v1
@@ -104,7 +64,7 @@ jobs:
       uses: haya14busa/action-cond@v1
       id: fox_release
       with:
-        cond: ${{ github.event.inputs.ORANGEFOX_VERSION != 'R11_x'}}
+        cond: ${{ github.event.inputs.ORANGEFOX_VERSION != 'R11_1'}}
         if_true: export FOX_VERSION="${{ github.event.inputs.ORANGEFOX_VERSION }}"
         if_false: echo $FOX_VERSION
 
@@ -115,20 +75,11 @@ jobs:
         
     - name: Building OrangeFox
       run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_R11_1
         set +e
         source build/envsetup.sh
         ${{ steps.fox_release.outputs.value }}
         set -e
-        if [ -f ${GITHUB_WORKSPACE}/Magisk/Magisk-v26.3.zip ]; then
-          export FOX_USE_SPECIFIC_MAGISK_ZIP=${GITHUB_WORKSPACE}/magisk/Magisk-v26.3.zip
-        else
-          cd ${GITHUB_WORKSPACE}/Magisk/ 
-          ${{ steps.magisk.outputs.value }}
-          mv Magisk.*.apk Magisk.zip
-          cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-          export FOX_USE_SPECIFIC_MAGISK_ZIP=${GITHUB_WORKSPACE}/magisk/Magisk.zip
-        fi
         ${{ steps.fox_branch.outputs.value }}
 
     - name: Set Build Date # For Build Date Info, currently using Asia/Manila
@@ -137,13 +88,13 @@ jobs:
 
     - name: Check if Recovery Exist
       run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        if [ -f out/target/product/${{ github.event.inputs.DEVICE_NAME }}/OrangeFox*.img ]; then
+        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_R11_1
+        if [ -f out/target/product/rosemary/OrangeFox*.img ]; then
             echo "CHECK_IMG_IS_OK=true" >> $GITHUB_ENV
         else
             echo "Recovery out directory is empty."
         fi
-        if [ -f out/target/product/${{ github.event.inputs.DEVICE_NAME }}/OrangeFox*.zip ]; then
+        if [ -f out/target/product/rosemary/OrangeFox*.zip ]; then
             echo "CHECK_ZIP_IS_OK=true" >> $GITHUB_ENV
         else
             echo "Recovery out directory is empty."
@@ -154,10 +105,10 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/OrangeFox*.img
-          OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/OrangeFox*.zip
-        name: Unofficial OrangeFox ${{ github.event.outputs.release_name }} for ${{ github.event.inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
+          OrangeFox/fox_R11_1/out/target/product/rosemary/OrangeFox*.img
+          OrangeFox/fox_R11_1/out/target/product/rosemary/OrangeFox*.zip
+        name: Unofficial OrangeFox ${{ github.event.outputs.release_name }} for rosemary // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
-          Build: fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-          Device: ${{ github.event.inputs.DEVICE_TREE }}/tree/${{ github.event.inputs.DEVICE_TREE_BRANCH }}
+          Build: fox_R11_1
+          Device: https://github.com/RedmiNote10S/recovery_device_redmi_rosemary/tree/android-12.1
